@@ -43,6 +43,7 @@ namespace MineMogulModMenu
         public class PlayerConfig
         {
             public bool Noclip = false;
+            public float NoclipSpeed = 20f;
             public float WalkSpeed = 4f;
             public float SprintSpeed = 6f;
             public float JumpHeight = 2f;

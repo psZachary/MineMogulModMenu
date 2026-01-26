@@ -4,7 +4,7 @@ using UnityEngine;
 namespace MineMogulModMenu {
     public class NoclipController : MonoBehaviour {
         public bool NoclipActive { get; private set; }
-        public float Speed { get; set; } = 50f;
+        public float Speed { get { return Config.Instance.Player.NoclipSpeed; }}
         private float oldWalkSpeed = 0f;
         private float oldSprintSpeed = 0f;
         private float oldDuckSpeed = 0f;

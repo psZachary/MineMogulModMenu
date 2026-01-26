@@ -56,6 +56,7 @@ namespace MineMogulModMenu
         private void OnPlayerTab()
         {
             Config.Instance.Player.Noclip = MenuUtilities.Toggle(Config.Instance.Player.Noclip, "Noclip (V)");
+            Config.Instance.Player.NoclipSpeed = MenuUtilities.HorizontalSlider("Noclip Speed", Config.Instance.Player.NoclipSpeed, 0.00f, 50f);
             Config.Instance.Player.WalkSpeed = MenuUtilities.HorizontalSlider("Walk Speed", Config.Instance.Player.WalkSpeed, 0.00f, 20f);
             if (MenuUtilities.Button("Set Walk Speed"))
             {
