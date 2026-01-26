@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>MineMogulModMenu</AssemblyName>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BepInEx"><HintPath>GameAssemblies\BepInEx.dll</HintPath></Reference>
+    <Reference Include="0Harmony"><HintPath>GameAssemblies\0Harmony.dll</HintPath></Reference>
+    <Reference Include="UnityEngine"><HintPath>GameAssemblies\UnityEngine.dll</HintPath></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>GameAssemblies\UnityEngine.CoreModule.dll</HintPath></Reference>
+    <Reference Include="UnityEngine.IMGUIModule"><HintPath>GameAssemblies\UnityEngine.IMGUIModule.dll</HintPath></Reference>
+    <Reference Include="UnityEngine.InputLegacyModule"><HintPath>GameAssemblies\UnityEngine.InputLegacyModule.dll</HintPath></Reference>
+    <Reference Include="UnityEngine.PhysicsModule"><HintPath>GameAssemblies\UnityEngine.PhysicsModule.dll</HintPath></Reference>
+    <Reference Include="Assembly-CSharp"><HintPath>GameAssemblies\Assembly-CSharp.dll</HintPath></Reference>
+  </ItemGroup>
+</Project>
