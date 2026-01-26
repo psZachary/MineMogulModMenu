@@ -1,5 +1,5 @@
 # MineMogulModMenu
-A mod menu written in C# using BepinEx for the game MineMogul. 
+A bloat-free mod menu written in C# using BepinEx for the game MineMogul. 
 ## Requirements
 - [.NET 10 SDK](https://dotnet.microsoft.com/en-us/download)
 - [BepinEx](https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.4/BepInEx_win_x64_5.4.23.4.zip)
