@@ -2,19 +2,25 @@ using UnityEngine;
 
 namespace MineMogulModMenu {
     public class MenuUtilities : MonoBehaviour {
-        private static bool stylesInit = false;
         public static bool IsDragging {get; private set;}
         public static Vector2 DragOffset {get; private set;}
         public static GUIStyle WindowStyle {get; private set;}
         public static GUIStyle ButtonStyle {get; private set;}
+        public static GUIStyle SelectedButtonStyle {get; private set;}
         public static GUIStyle HeaderStyle {get; private set;}
         public static GUIStyle ToggleStyle {get; private set;}
         public static GUIStyle TextFieldStyle {get; private set;}
         public static GUIStyle TextAreaStyle {get; private set;}
         public static GUIStyle SliderStyle {get; private set;}
         public static GUIStyle SliderThumbStyle {get; private set;}
-        private static Texture2D checkboxOff;
-        private static Texture2D checkboxOn;
+        public static GUIStyle SelectionTableStyle {get; private set;}
+        public static GUIStyle SelectionTableSelectedStyle {get; private set;}
+        public static GUIStyle SelectionTableBorderStyle {get; private set;}
+        public static GUIStyle SeparatorStyle {get; private set;}
+        private static Texture2D checkboxOffTexture;
+        private static Texture2D checkboxOnTexture;
+        private static bool stylesInit = false;
+
         public static void ResetStyles() {
             stylesInit = false;
         }
@@ -53,9 +59,21 @@ namespace MineMogulModMenu {
             return GUILayout.Button(label, ButtonStyle);
         }
 
+        public static bool Button(string label, bool selected)
+        {
+            GUIStyle style = selected ? SelectedButtonStyle : ButtonStyle;
+            return GUILayout.Button(label, style);
+        }
+
         public static bool Button(string label, float width)
         {
             return GUILayout.Button(label, ButtonStyle, GUILayout.Width(width));
+        }
+
+        public static bool Button(string label, float width, bool selected)
+        {
+            GUIStyle style = selected ? SelectedButtonStyle : ButtonStyle;
+            return GUILayout.Button(label, style, GUILayout.Width(width));
         }
 
         public static bool Button(string label, float width, float height)
@@ -63,12 +81,18 @@ namespace MineMogulModMenu {
             return GUILayout.Button(label, ButtonStyle, GUILayout.Width(width), GUILayout.Height(height));
         }
 
+        public static bool Button(string label, float width, float height, bool selected)
+        {
+            GUIStyle style = selected ? SelectedButtonStyle : ButtonStyle;
+            return GUILayout.Button(label, style, GUILayout.Width(width), GUILayout.Height(height));
+        }
+
         // Toggle function
         public static bool Toggle(bool value, string label)
         {
             Rect rect = GUILayoutUtility.GetRect(200, 20);
 
-            Texture2D box = value ? checkboxOn : checkboxOff;
+            Texture2D box = value ? checkboxOnTexture : checkboxOffTexture;
             if (GUI.Button(new Rect(rect.x, rect.y, 16, 16), box, GUIStyle.none))
                 value = !value;
 
@@ -160,6 +184,54 @@ namespace MineMogulModMenu {
             return value;
         }
 
+        // SelectionTable functions
+        public static int SelectionTable(string label, string[] options, int selectedIndex)
+        {
+            return SelectionTable(label, options, selectedIndex, 150f, 10f);
+        }
+
+        public static int SelectionTable(string label, string[] options, int selectedIndex, float height)
+        {
+            return SelectionTable(label, options, selectedIndex, height, 10f);
+        }
+
+        public static int SelectionTable(string label, string[] options, int selectedIndex, float height, float padding)
+        {
+            // Draw label
+            GUILayout.Label(label, HeaderStyle);
+            GUILayout.Space(5);
+
+            // Begin border box
+            GUILayout.BeginVertical(SelectionTableBorderStyle);
+            GUILayout.Space(padding);
+
+            // Begin inner content area with padding
+            GUILayout.BeginHorizontal();
+            GUILayout.Space(padding);
+            GUILayout.BeginVertical(GUILayout.Height(height), GUILayout.ExpandWidth(true));
+
+            // Draw selection options
+            for (int i = 0; i < options.Length; i++)
+            {
+                GUIStyle style = (i == selectedIndex) ? SelectionTableSelectedStyle : SelectionTableStyle;
+
+                if (GUILayout.Button(options[i], style, GUILayout.ExpandWidth(true)))
+                {
+                    selectedIndex = i;
+                }
+            }
+
+            // End inner content area with padding
+            GUILayout.EndVertical();
+            GUILayout.Space(padding);
+            GUILayout.EndHorizontal();
+
+            GUILayout.Space(padding);
+            GUILayout.EndVertical();
+
+            return selectedIndex;
+        }
+
         // Box/Panel functions
         public static void BeginBox()
         {
@@ -203,10 +275,22 @@ namespace MineMogulModMenu {
             GUILayout.FlexibleSpace();
         }
 
-        // Separator line
+        // Separator line functions
         public static void Separator()
         {
-            GUILayout.Box("", GUILayout.ExpandWidth(true), GUILayout.Height(1));
+            GUILayout.Box("", SeparatorStyle, GUILayout.ExpandWidth(true), GUILayout.Height(2));
+        }
+
+        public static void Separator(float height)
+        {
+            GUILayout.Box("", SeparatorStyle, GUILayout.ExpandWidth(true), GUILayout.Height(height));
+        }
+
+        public static void Separator(float height, float spacing)
+        {
+            GUILayout.Space(spacing);
+            GUILayout.Box("", SeparatorStyle, GUILayout.ExpandWidth(true), GUILayout.Height(height));
+            GUILayout.Space(spacing);
         }
         private static Texture2D MakeCheckbox(int w, int h, Color bgColor, bool isChecked)
         {
@@ -244,8 +328,8 @@ namespace MineMogulModMenu {
         {
             if (stylesInit) return;
 
-            checkboxOff = MakeCheckbox(16, 16, new Color(0.18f, 0.18f, 0.18f, 1f), false);
-            checkboxOn = MakeCheckbox(16, 16, new Color(0.5f, 0.2f, 0.7f, 1f), true);
+            checkboxOffTexture = MakeCheckbox(16, 16, new Color(0.18f, 0.18f, 0.18f, 1f), false);
+            checkboxOnTexture = MakeCheckbox(16, 16, new Color(0.5f, 0.2f, 0.7f, 1f), true);
 
             Font usingFont = Font.CreateDynamicFontFromOSFont("Consolas", 16);
 
@@ -272,6 +356,14 @@ namespace MineMogulModMenu {
             ButtonStyle.padding = new RectOffset(10, 10, 6, 6);
             ButtonStyle.font = usingFont;
 
+            SelectedButtonStyle = new GUIStyle(ButtonStyle);
+            SelectedButtonStyle.normal.background = MakeTex(1, 1, new Color(0.5f, 0.2f, 0.7f, 1f));
+            SelectedButtonStyle.hover.background = MakeTex(1, 1, new Color(0.6f, 0.3f, 0.8f, 1f));
+            SelectedButtonStyle.active.background = MakeTex(1, 1, new Color(0.7f, 0.4f, 0.9f, 1f));
+            SelectedButtonStyle.normal.textColor = Color.white;
+            SelectedButtonStyle.hover.textColor = Color.white;
+            SelectedButtonStyle.active.textColor = Color.white;
+
             HeaderStyle = new GUIStyle(GUI.skin.label);
             HeaderStyle.normal.textColor = new Color(1f, 1f, 1f);
             HeaderStyle.fontSize = 12;
@@ -279,12 +371,12 @@ namespace MineMogulModMenu {
             HeaderStyle.font = usingFont;
 
             ToggleStyle = new GUIStyle(GUI.skin.toggle);
-            ToggleStyle.normal.background = checkboxOff;
-            ToggleStyle.onNormal.background = checkboxOn;
-            ToggleStyle.hover.background = checkboxOff;
-            ToggleStyle.onHover.background = checkboxOn;
-            ToggleStyle.active.background = checkboxOff;
-            ToggleStyle.onActive.background = checkboxOn;
+            ToggleStyle.normal.background = checkboxOffTexture;
+            ToggleStyle.onNormal.background = checkboxOnTexture;
+            ToggleStyle.hover.background = checkboxOffTexture;
+            ToggleStyle.onHover.background = checkboxOnTexture;
+            ToggleStyle.active.background = checkboxOffTexture;
+            ToggleStyle.onActive.background = checkboxOnTexture;
             ToggleStyle.normal.textColor = Color.white;
             ToggleStyle.onNormal.textColor = new Color(0.9f, 0.6f, 1f);
             ToggleStyle.hover.textColor = new Color(0.9f, 0.6f, 1f);
@@ -323,15 +415,47 @@ namespace MineMogulModMenu {
             SliderStyle.normal.background = MakeTex(1, 1, new Color(0.18f, 0.18f, 0.18f, 1f));
             SliderStyle.hover.background = MakeTex(1, 1, new Color(0.2f, 0.12f, 0.28f, 1f));
             SliderStyle.active.background = MakeTex(1, 1, new Color(0.25f, 0.15f, 0.35f, 1f));
-            SliderStyle.fixedHeight = 4;
+            SliderStyle.fixedHeight = 8;
             SliderStyle.margin = new RectOffset(4, 4, 8, 8);
 
             SliderThumbStyle = new GUIStyle(GUI.skin.horizontalSliderThumb);
             SliderThumbStyle.normal.background = MakeTex(1, 1, new Color(0.5f, 0.2f, 0.7f, 1f));
             SliderThumbStyle.hover.background = MakeTex(1, 1, new Color(0.6f, 0.3f, 0.8f, 1f));
             SliderThumbStyle.active.background = MakeTex(1, 1, new Color(0.7f, 0.4f, 0.9f, 1f));
-            SliderThumbStyle.fixedWidth = 12;
-            SliderThumbStyle.fixedHeight = 12;
+            SliderThumbStyle.fixedWidth = 8;
+            SliderThumbStyle.fixedHeight = 6;
+
+            SelectionTableStyle = new GUIStyle(GUI.skin.button);
+            SelectionTableStyle.normal.background = MakeTex(1, 1, new Color(0.15f, 0.15f, 0.15f, 1f));
+            SelectionTableStyle.hover.background = MakeTex(1, 1, new Color(0.2f, 0.12f, 0.28f, 1f));
+            SelectionTableStyle.active.background = MakeTex(1, 1, new Color(0.25f, 0.15f, 0.35f, 1f));
+            SelectionTableStyle.normal.textColor = Color.white;
+            SelectionTableStyle.hover.textColor = new Color(0.9f, 0.6f, 1f);
+            SelectionTableStyle.active.textColor = Color.white;
+            SelectionTableStyle.fontSize = 12;
+            SelectionTableStyle.fontStyle = FontStyle.Normal;
+            SelectionTableStyle.padding = new RectOffset(8, 8, 6, 6);
+            SelectionTableStyle.font = usingFont;
+            SelectionTableStyle.alignment = TextAnchor.MiddleLeft;
+
+            SelectionTableSelectedStyle = new GUIStyle(SelectionTableStyle);
+            SelectionTableSelectedStyle.normal.background = MakeTex(1, 1, new Color(0.5f, 0.2f, 0.7f, 1f));
+            SelectionTableSelectedStyle.hover.background = MakeTex(1, 1, new Color(0.6f, 0.3f, 0.8f, 1f));
+            SelectionTableSelectedStyle.active.background = MakeTex(1, 1, new Color(0.7f, 0.4f, 0.9f, 1f));
+            SelectionTableSelectedStyle.normal.textColor = Color.white;
+            SelectionTableSelectedStyle.hover.textColor = Color.white;
+            SelectionTableSelectedStyle.active.textColor = Color.white;
+            SelectionTableSelectedStyle.fontStyle = FontStyle.Bold;
+
+            SelectionTableBorderStyle = new GUIStyle();
+            SelectionTableBorderStyle.normal.background = MakeTex(1, 1, new Color(0.18f, 0.18f, 0.18f, 1f));
+            SelectionTableBorderStyle.border = new RectOffset(2, 2, 2, 2);
+            SelectionTableBorderStyle.padding = new RectOffset(0, 0, 0, 0);
+
+            SeparatorStyle = new GUIStyle();
+            SeparatorStyle.normal.background = MakeTex(1, 1, new Color(0.18f, 0.18f, 0.18f, 1f));
+            SeparatorStyle.margin = new RectOffset(0, 0, 0, 0);
+            SeparatorStyle.padding = new RectOffset(0, 0, 0, 0);
 
             stylesInit = true;
         }

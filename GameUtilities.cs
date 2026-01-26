@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 namespace MineMogulModMenu
@@ -8,7 +11,36 @@ namespace MineMogulModMenu
         private static EconomyManager _economyManager;
         private static QuestManager _questManager;
         private static DepositBox _depositBox;
-        
+        private static List<AutoMiner> _autoMiners;
+        private static List<BlastFurnace> _furnaces;
+        private static float _lastAutoMinerRefreshTime;
+        private static float _lastFurnanceRefreshTime;
+        private const float RefreshInterval = 0.5f;
+
+        public static List<BlastFurnace> Furnaces
+        {
+            get
+            {
+                if (_furnaces == null || Time.time - _lastFurnanceRefreshTime > RefreshInterval)
+                {
+                    _furnaces = FindObjectsByType<BlastFurnace>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).ToList();
+                    _lastFurnanceRefreshTime = Time.time;
+                }
+                return _furnaces;
+            }
+        }
+        public static List<AutoMiner> AutoMiners
+        {
+            get
+            {
+                if (_autoMiners == null || Time.time - _lastAutoMinerRefreshTime > RefreshInterval)
+                {
+                    _autoMiners = FindObjectsByType<AutoMiner>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).ToList();
+                    _lastAutoMinerRefreshTime = Time.time;
+                }
+                return _autoMiners;
+            }
+        }
         public static PlayerController LocalPlayerController
         {
             get
@@ -36,7 +68,7 @@ namespace MineMogulModMenu
                 return _depositBox;
             }
         }
-            public static EconomyManager EconomyManager
+        public static EconomyManager EconomyManager
         {
             get
             {
@@ -45,6 +77,7 @@ namespace MineMogulModMenu
                 return _economyManager;
             }
         }
+        
         private void Awake() {
             UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
         }

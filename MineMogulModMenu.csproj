@@ -9,6 +9,7 @@
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
   </ItemGroup>
 
+  <!-- Import from build.bat or manually from game folder -->
   <ItemGroup>
     <Reference Include="BepInEx"><HintPath>GameAssemblies\BepInEx.dll</HintPath></Reference>
     <Reference Include="0Harmony"><HintPath>GameAssemblies\0Harmony.dll</HintPath></Reference>

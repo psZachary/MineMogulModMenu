@@ -1,5 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using HarmonyLib;
 using UnityEngine;
 
 namespace MineMogulModMenu
@@ -23,7 +27,7 @@ namespace MineMogulModMenu
         public MenuTab CurrentTab { get; private set; }
         public SubMenuTab CurrentSubTab { get; private set; }
         public bool ShowMenu { get; private set; }
-        private Rect windowRect = new Rect(100, 100, 750f, 450f);
+        private Rect windowRect = new Rect(100, 100, 950f, 750f);
 
         private void Start()
         {
@@ -46,8 +50,6 @@ namespace MineMogulModMenu
         }
         private void OnPlayerTab()
         {
-            MenuUtilities.Space(10f);
-
             Config.Instance.Player.WalkSpeed = MenuUtilities.HorizontalSlider("Walk Speed", Config.Instance.Player.WalkSpeed, 0.00f, 20f);
             if (MenuUtilities.Button("Set Walk Speed"))
             {
@@ -61,26 +63,36 @@ namespace MineMogulModMenu
         }
         private void OnMinersSubTab()
         {
+            string[] autoMinersStringList = GameUtilities.AutoMiners.Select(obj => obj.ToString()).ToArray();
+            Config.Instance.Miners.SelectedIndex = MenuUtilities.SelectionTable(
+                "Auto Miners",
+                autoMinersStringList.Append("All Miners").ToArray(), 
+                Config.Instance.Miners.SelectedIndex
+            );
+            MinerModManager.SelectedMinerIndex = Config.Instance.Miners.SelectedIndex;
+            MenuUtilities.Separator(2f, 2f);
+
+            Config.Instance.Miners.HighlightSelected = MenuUtilities.Toggle(Config.Instance.Miners.HighlightSelected, "Highlight Selected");
             Config.Instance.Miners.SpawnRate = MenuUtilities.HorizontalSlider("Spawn Rate", Config.Instance.Miners.SpawnRate, 0.00f, 10f);
-            if (MenuUtilities.Button("Set Spawn Rate"))
-            {
-                FindObjectsByType(typeof(AutoMiner), FindObjectsSortMode.None).ToList().ForEach(obj =>
-                {
-                    AutoMiner miner = obj as AutoMiner;
-                    miner.SpawnRate = Config.Instance.Miners.SpawnRate;
-                });
+            if (MenuUtilities.Button("Set Spawn Rate")) {
+                MinerModManager.ApplySpawnRate(Config.Instance.Miners.SpawnRate);
             }
         }
         private void OnFurnacesSubTab()
         {
+            string[] furnacesStringList = GameUtilities.Furnaces.Select(obj => obj.ToString()).ToArray();
+            Config.Instance.Furnaces.SelectedIndex = MenuUtilities.SelectionTable(
+                "Furnaces",
+                furnacesStringList.Append("All Furnaces").ToArray(), 
+                Config.Instance.Furnaces.SelectedIndex
+            );
+            FurnaceModManager.SelectedFurnaceIndex = Config.Instance.Furnaces.SelectedIndex;
+            MenuUtilities.Separator(2f, 2f);
+            Config.Instance.Furnaces.HighlightSelected = MenuUtilities.Toggle(Config.Instance.Furnaces.HighlightSelected, "Highlight Selected");
             Config.Instance.Furnaces.ProcessingTime = MenuUtilities.HorizontalSlider("Processing Time", Config.Instance.Furnaces.ProcessingTime, 0.00f, 10f);
             if (MenuUtilities.Button("Set Processing Rate"))
             {
-                FindObjectsByType(typeof(BlastFurnace), FindObjectsSortMode.None).ToList().ForEach(obj =>
-                {
-                    BlastFurnace furnace = obj as BlastFurnace;
-                    furnace.ProcessingTime = Config.Instance.Furnaces.ProcessingTime;
-                });
+                FurnaceModManager.ApplyProcessingTime(Config.Instance.Furnaces.ProcessingTime);
             }
         }
         private void OnEconomyTab()
@@ -112,15 +124,14 @@ namespace MineMogulModMenu
         private void OnWorldTab()
         {
             MenuUtilities.BeginHorizontal();
-            if (MenuUtilities.Button("Miners"))
+            if (MenuUtilities.Button("Miners", CurrentSubTab == SubMenuTab.Miners))
                 CurrentSubTab = SubMenuTab.Miners;
-            if (MenuUtilities.Button("Furnaces"))
+            if (MenuUtilities.Button("Furnaces", CurrentSubTab == SubMenuTab.Furnaces))
                 CurrentSubTab = SubMenuTab.Furnaces;
-            if (MenuUtilities.Button("Deposit Box"))
+            if (MenuUtilities.Button("Deposit Box", CurrentSubTab == SubMenuTab.DepositBox))
                 CurrentSubTab = SubMenuTab.DepositBox;
             MenuUtilities.EndHorizontal();
             MenuUtilities.Space(10f);
-
             switch (CurrentSubTab)
             {
                 case SubMenuTab.Furnaces:
@@ -168,33 +179,38 @@ namespace MineMogulModMenu
             MenuUtilities.Space(25f);
 
             MenuUtilities.BeginHorizontal();
-            if (MenuUtilities.Button("Player"))
+            if (MenuUtilities.Button("Player", CurrentTab == MenuTab.Player))
                 CurrentTab = MenuTab.Player;
-            if (MenuUtilities.Button("Economy"))
+            if (MenuUtilities.Button("Economy", CurrentTab == MenuTab.Economy))
                 CurrentTab = MenuTab.Economy;
-            if (MenuUtilities.Button("World"))
+            if (MenuUtilities.Button("World", CurrentTab == MenuTab.World))
                 CurrentTab = MenuTab.World;
-            if (MenuUtilities.Button("Quests"))
+            if (MenuUtilities.Button("Quests", CurrentTab == MenuTab.Quests))
                 CurrentTab = MenuTab.Quests;
-            if (MenuUtilities.Button("Settings"))
+            if (MenuUtilities.Button("Settings", CurrentTab == MenuTab.Settings))
                 CurrentTab = MenuTab.Settings;
             MenuUtilities.EndHorizontal();
 
             switch (CurrentTab)
             {
                 case MenuTab.Player:
+                    MenuUtilities.Space(10f);
                     OnPlayerTab();
                     break;
                 case MenuTab.Economy:
+                    MenuUtilities.Space(10f);
                     OnEconomyTab();
                     break;
                 case MenuTab.World:
+                    // Has sub tabs so no spacing
                     OnWorldTab();
                     break;
                 case MenuTab.Quests:
+                    MenuUtilities.Space(10f);
                     OnQuestsTab();
                     break;
                 case MenuTab.Settings:
+                    MenuUtilities.Space(10f);
                     OnSettingsTab();
                     break;
             }

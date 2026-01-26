@@ -1,3 +1,5 @@
+using UnityEngine.Rendering;
+
 namespace MineMogulModMenu
 {
     public class Config
@@ -14,13 +16,18 @@ namespace MineMogulModMenu
         }
         public class MinerConfig
         {
+            public bool HighlightSelected = true;
+            public int SelectedIndex = 0;
             public float SpawnRate = 1f;
         }
         
         public class FurnacesConfig
         {
+            public bool HighlightSelected = true;
             public float ProcessingTime = 1f;
+            public int SelectedIndex = 0;
         }
+
         public class DepositBoxConfig
         {
             public float Speed = 2f;
