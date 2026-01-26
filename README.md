@@ -18,6 +18,6 @@ A bloat-free mod menu written in C# using BepinEx for the game MineMogul.
    
 On first run, you'll be prompted for your game path (e.g., `D:\steam\steamapps\common\MineMogul`). It will automatically copy required game assemblies & place the output assembly in the BepinEx folder. 
 ## Preview
-![Preview](https://i.ibb.co/d0Xq12Wf/Screen-Recording-2026-01-26-001402.gif)
+![Preview](https://i.ibb.co/Gfcxr19n/preview2.gif)
 ## License
 MIT
