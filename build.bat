@@ -12,14 +12,8 @@ if not exist "GameAssemblies" (
     mkdir GameAssemblies
 )
 
-copy "!GAME_PATH!\BepInEx\core\BepInEx.dll" GameAssemblies\
-copy "!GAME_PATH!\BepInEx\core\0Harmony.dll" GameAssemblies\
-copy "!GAME_PATH!\MineMogul_Data\Managed\UnityEngine.dll" GameAssemblies\
-copy "!GAME_PATH!\MineMogul_Data\Managed\UnityEngine.CoreModule.dll" GameAssemblies\
-copy "!GAME_PATH!\MineMogul_Data\Managed\UnityEngine.IMGUIModule.dll" GameAssemblies\
-copy "!GAME_PATH!\MineMogul_Data\Managed\UnityEngine.InputLegacyModule.dll" GameAssemblies\
-copy "!GAME_PATH!\MineMogul_Data\Managed\UnityEngine.PhysicsModule.dll" GameAssemblies\
-copy "!GAME_PATH!\MineMogul_Data\Managed\Assembly-CSharp.dll" GameAssemblies\
+xcopy "!GAME_PATH!\BepInEx\core\*.dll" "GameAssemblies\" /Y
+xcopy "!GAME_PATH!\MineMogul_Data\Managed\*.dll" "GameAssemblies\" /Y
 
 
 dotnet build
