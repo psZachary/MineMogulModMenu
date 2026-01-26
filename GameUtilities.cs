@@ -10,6 +10,7 @@ namespace MineMogulModMenu
         private static PlayerController _localPlayerController;
         private static EconomyManager _economyManager;
         private static QuestManager _questManager;
+        private static ResearchManager _researchManager;
         private static DepositBox _depositBox;
         private static List<AutoMiner> _autoMiners;
         private static List<BlastFurnace> _furnaces;
@@ -57,6 +58,15 @@ namespace MineMogulModMenu
                 if (_questManager == null)
                     _questManager = Object.FindFirstObjectByType<QuestManager>();
                 return _questManager;
+            }
+        }
+        public static ResearchManager ResearchManager
+        {
+            get
+            {
+                if (_researchManager == null)
+                    _researchManager = Object.FindFirstObjectByType<ResearchManager>();
+                return _researchManager;
             }
         }
         public static DepositBox DepositBox

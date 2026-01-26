@@ -11,8 +11,16 @@ namespace MineMogulModMenu
         public FurnacesConfig Furnaces { get; } = new FurnacesConfig();
         public DepositBoxConfig DepositBox { get; } = new DepositBoxConfig();
         public EconomyConfig Economy { get; } = new EconomyConfig();
+        public ResearchConfig Research { get; } = new ResearchConfig();
+        public PolishingMachineConfig PolishingMachine { get; } = new PolishingMachineConfig();
+        public class PolishingMachineConfig {
+            public bool IgnoreDirtyOres = false;
+        }
         public class EconomyConfig {
             public string AddMoney = "500";
+        }
+        public class ResearchConfig {
+            public string AddTickets = "10";
         }
         public class MinerConfig
         {
@@ -34,8 +42,10 @@ namespace MineMogulModMenu
         }
         public class PlayerConfig
         {
-            public float WalkSpeed = 5f;
-            public float SprintSpeed = 5f;
+            public bool Noclip = false;
+            public float WalkSpeed = 4f;
+            public float SprintSpeed = 6f;
+            public float JumpHeight = 2f;
         }
     }
 }

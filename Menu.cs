@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Xml.Serialization;
 using HarmonyLib;
 using UnityEngine;
 
@@ -11,6 +13,7 @@ namespace MineMogulModMenu
     public enum MenuTab
     {
         Player,
+        Research,
         Economy,
         World,
         Quests,
@@ -19,8 +22,10 @@ namespace MineMogulModMenu
     public enum SubMenuTab
     {
         Miners,
+        PolishingMachine,
         Furnaces,
-        DepositBox
+        DepositBox,
+        Detonators
     }
     public class Menu : MonoBehaviour
     {
@@ -50,6 +55,7 @@ namespace MineMogulModMenu
         }
         private void OnPlayerTab()
         {
+            Config.Instance.Player.Noclip = MenuUtilities.Toggle(Config.Instance.Player.Noclip, "Noclip (V)");
             Config.Instance.Player.WalkSpeed = MenuUtilities.HorizontalSlider("Walk Speed", Config.Instance.Player.WalkSpeed, 0.00f, 20f);
             if (MenuUtilities.Button("Set Walk Speed"))
             {
@@ -59,6 +65,20 @@ namespace MineMogulModMenu
             if (MenuUtilities.Button("Set Sprint Speed"))
             {
                 GameUtilities.LocalPlayerController.SprintSpeed = Config.Instance.Player.SprintSpeed;
+            }
+            Config.Instance.Player.JumpHeight = MenuUtilities.HorizontalSlider("Jump Height", Config.Instance.Player.JumpHeight, 0.00f, 20f);
+            if (MenuUtilities.Button("Set Jump Height"))
+            {
+                GameUtilities.LocalPlayerController.JumpHeight = Config.Instance.Player.JumpHeight;
+            }
+        }
+        private void OnResearchTab()
+        {
+            Config.Instance.Research.AddTickets = MenuUtilities.TextField(Config.Instance.Research.AddTickets);
+            if (MenuUtilities.Button("Add Tickets"))
+            {
+                if (int.TryParse(Config.Instance.Economy.AddMoney, out int addTickets))
+                    GameUtilities.ResearchManager.AddResearchTickets(addTickets);
             }
         }
         private void OnMinersSubTab()
@@ -121,6 +141,17 @@ namespace MineMogulModMenu
             //    field.SetValue(GameUtilities.DepositBox, Config.Instance.DepositBox.Speed);
             //}
         }
+        private void OnDetonatorsSubTab() {
+            if (MenuUtilities.Button("Detonate All")) {
+                FindObjectsByType<DetonatorTrigger>(FindObjectsSortMode.None).ToList().ForEach(obj => obj.Interact(null));
+            }
+        }
+
+        private void OnPolishingMachineSubTab()
+        {
+            Config.Instance.PolishingMachine.IgnoreDirtyOres = MenuUtilities.Toggle(Config.Instance.PolishingMachine.IgnoreDirtyOres, "Ignore Dirty Ores");
+        }
+
         private void OnWorldTab()
         {
             MenuUtilities.BeginHorizontal();
@@ -128,8 +159,13 @@ namespace MineMogulModMenu
                 CurrentSubTab = SubMenuTab.Miners;
             if (MenuUtilities.Button("Furnaces", CurrentSubTab == SubMenuTab.Furnaces))
                 CurrentSubTab = SubMenuTab.Furnaces;
+            if (MenuUtilities.Button("Polishing", CurrentSubTab == SubMenuTab.PolishingMachine))
+                CurrentSubTab = SubMenuTab.PolishingMachine;
             if (MenuUtilities.Button("Deposit Box", CurrentSubTab == SubMenuTab.DepositBox))
                 CurrentSubTab = SubMenuTab.DepositBox;
+            if (MenuUtilities.Button("Detonators", CurrentSubTab == SubMenuTab.Detonators))
+                CurrentSubTab = SubMenuTab.Detonators;
+
             MenuUtilities.EndHorizontal();
             MenuUtilities.Space(10f);
             switch (CurrentSubTab)
@@ -140,8 +176,14 @@ namespace MineMogulModMenu
                 case SubMenuTab.Miners:
                     OnMinersSubTab();
                     break;
+                case SubMenuTab.PolishingMachine:
+                    OnPolishingMachineSubTab();
+                    break;
                 case SubMenuTab.DepositBox:
                     OnDepositBoxSubTab();
+                    break;
+                case SubMenuTab.Detonators:
+                    OnDetonatorsSubTab();
                     break;
             }
         }
@@ -181,6 +223,8 @@ namespace MineMogulModMenu
             MenuUtilities.BeginHorizontal();
             if (MenuUtilities.Button("Player", CurrentTab == MenuTab.Player))
                 CurrentTab = MenuTab.Player;
+            if (MenuUtilities.Button("Research", CurrentTab == MenuTab.Research))
+                CurrentTab = MenuTab.Research;
             if (MenuUtilities.Button("Economy", CurrentTab == MenuTab.Economy))
                 CurrentTab = MenuTab.Economy;
             if (MenuUtilities.Button("World", CurrentTab == MenuTab.World))
@@ -196,6 +240,10 @@ namespace MineMogulModMenu
                 case MenuTab.Player:
                     MenuUtilities.Space(10f);
                     OnPlayerTab();
+                    break;
+                case MenuTab.Research:
+                    MenuUtilities.Space(10f);
+                    OnResearchTab();
                     break;
                 case MenuTab.Economy:
                     MenuUtilities.Space(10f);
