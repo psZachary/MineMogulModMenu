@@ -54,7 +54,7 @@ namespace MineMogulModMenu
         }
         private void OnPlayerTab()
         { 
-            Config.Instance.Player.Noclip = MenuUtilities.Toggle(Config.Instance.Player.Noclip, "Noclip (V)");
+            MenuUtilities.Toggle(ref Config.Instance.Player.Noclip, "Noclip (V)");
             Config.Instance.Player.NoclipSpeed = MenuUtilities.HorizontalSlider("Noclip Speed", Config.Instance.Player.NoclipSpeed, 0.00f, 50f);
             Config.Instance.Player.WalkSpeed = MenuUtilities.HorizontalSlider("Walk Speed", Config.Instance.Player.WalkSpeed, 0.00f, 20f);
             if (MenuUtilities.Button("Set Walk Speed"))
@@ -92,7 +92,7 @@ namespace MineMogulModMenu
             MinerModManager.SelectedMinerIndex = Config.Instance.Miners.SelectedIndex;
             MenuUtilities.Separator(2f, 6f);
 
-            Config.Instance.Miners.HighlightSelected = MenuUtilities.Toggle(Config.Instance.Miners.HighlightSelected, "Highlight Selected");
+            MenuUtilities.Toggle(ref Config.Instance.Miners.HighlightSelected, "Highlight Selected");
             Config.Instance.Miners.SpawnRate = MenuUtilities.HorizontalSlider("Spawn Rate", Config.Instance.Miners.SpawnRate, 0.00f, 10f);
             if (MenuUtilities.Button("Set Spawn Rate"))
             {
@@ -110,7 +110,7 @@ namespace MineMogulModMenu
             FurnaceModManager.SelectedFurnaceIndex = Config.Instance.Furnaces.SelectedIndex;
             MenuUtilities.Separator(2f, 6f);
 
-            Config.Instance.Furnaces.HighlightSelected = MenuUtilities.Toggle(Config.Instance.Furnaces.HighlightSelected, "Highlight Selected");
+            MenuUtilities.Toggle(ref Config.Instance.Furnaces.HighlightSelected, "Highlight Selected");
             Config.Instance.Furnaces.ProcessingTime = MenuUtilities.HorizontalSlider("Processing Time", Config.Instance.Furnaces.ProcessingTime, 0.00f, 10f);
             if (MenuUtilities.Button("Set Processing Rate"))
             {
@@ -155,7 +155,7 @@ namespace MineMogulModMenu
 
         private void OnPolishingMachineSubTab()
         {
-            Config.Instance.PolishingMachine.IgnoreDirtyOres = MenuUtilities.Toggle(Config.Instance.PolishingMachine.IgnoreDirtyOres, "Ignore Dirty Ores");
+            MenuUtilities.Toggle(ref Config.Instance.PolishingMachine.IgnoreDirtyOres, "Ignore Dirty Ores");
         }
 
         private void OnWorldTab()
@@ -221,6 +221,9 @@ namespace MineMogulModMenu
 
         private void OnSettingsTab()
         {
+            MenuUtilities.Toggle(ref Config.Instance.Settings.HighlightThroughWalls, "Highlight Through Walls");
+            MenuUtilities.ColorPicker("Miner Highlight Color", ref Config.Instance.Settings.MinerHighlightColor);
+            MenuUtilities.ColorPicker("Furnace Highlight Color", ref Config.Instance.Settings.FurnaceHighlightColor);
 
         }
 

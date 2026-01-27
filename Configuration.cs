@@ -1,4 +1,5 @@
 using UnityEngine.Rendering;
+using UnityEngine;
 
 namespace MineMogulModMenu
 {
@@ -13,6 +14,7 @@ namespace MineMogulModMenu
         public EconomyConfig Economy { get; } = new EconomyConfig();
         public ResearchConfig Research { get; } = new ResearchConfig();
         public PolishingMachineConfig PolishingMachine { get; } = new PolishingMachineConfig();
+        public SettingsConfig Settings { get; } = new SettingsConfig();
         public class PolishingMachineConfig {
             public bool IgnoreDirtyOres = false;
         }
@@ -47,6 +49,11 @@ namespace MineMogulModMenu
             public float WalkSpeed = 4f;
             public float SprintSpeed = 6f;
             public float JumpHeight = 2f;
+        }
+        public class SettingsConfig {
+            public Color MinerHighlightColor = Color.blue;
+            public Color FurnaceHighlightColor = Color.orangeRed;
+            public bool HighlightThroughWalls = true;
         }
     }
 }

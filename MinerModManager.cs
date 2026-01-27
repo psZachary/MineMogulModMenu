@@ -19,14 +19,14 @@ namespace MineMogulModMenu {
                     DrawingManager.NextDrawEntries.Add(new DrawingEntry{
                         DrawType = DrawType.BoundingBox,
                         Renderers = [selectedMiner.GetComponent<Renderer>()],
-                        Color = Color.blue
+                        Color = Config.Instance.Settings.MinerHighlightColor
                     });
                 }
                 else {
                     DrawingManager.NextDrawEntries.Add(new DrawingEntry{
                         DrawType = DrawType.BoundingBox,
                         Renderers = [.. GameUtilities.AutoMiners.Select(f => f.GetComponent<Renderer>())],
-                        Color = Color.blue
+                        Color = Config.Instance.Settings.MinerHighlightColor
                     });
                 }
             }

@@ -27,7 +27,7 @@ namespace MineMogulModMenu
                     {
                         DrawType = DrawType.BoundingBox,
                         Renderers = [selectedFurnace.GetComponent<Renderer>()],
-                        Color = Color.orangeRed
+                        Color = Config.Instance.Settings.FurnaceHighlightColor
                     });
                 }
                 else
@@ -36,7 +36,7 @@ namespace MineMogulModMenu
                     {
                         DrawType = DrawType.BoundingBox,
                         Renderers = [.. GameUtilities.Furnaces.Select(f => f.GetComponent<Renderer>())],
-                        Color = Color.orangeRed
+                        Color = Config.Instance.Settings.FurnaceHighlightColor
                     });
                 }
             }

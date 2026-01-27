@@ -14,6 +14,7 @@ namespace MineMogulModMenu {
         public static GUIStyle TextAreaStyle {get; private set;}
         public static GUIStyle SliderStyle {get; private set;}
         public static GUIStyle SliderThumbStyle {get; private set;}
+        public static GUIStyle ColorPickerSliderStyle {get; private set;}
         public static GUIStyle SelectionTableStyle {get; private set;}
         public static GUIStyle SelectionTableSelectedStyle {get; private set;}
         public static GUIStyle SelectionTableBorderStyle {get; private set;}
@@ -298,6 +299,85 @@ namespace MineMogulModMenu {
             GUILayout.Box("", SeparatorStyle, GUILayout.ExpandWidth(true), GUILayout.Height(height));
             GUILayout.Space(spacing);
         }
+
+        // ColorPicker function
+        public static Color ColorPicker(string label, Color color)
+        {
+            return ColorPicker(label, color, true);
+        }
+
+        public static Color ColorPicker(string label, Color color, bool showAlpha)
+        {
+            GUILayout.Label(label, HeaderStyle);
+            GUILayout.Space(5);
+
+            GUILayout.BeginHorizontal();
+
+            // Color preview box
+            Texture2D previewTex = MakeTex(120, 120, color);
+            GUILayout.Box(previewTex, GUIStyle.none, GUILayout.Width(120), GUILayout.Height(120));
+            Destroy(previewTex);
+
+            GUILayout.Space(10);
+
+            // Create compact slider style for color picker
+            GUIStyle compactSliderStyle = new(SliderStyle)
+            {
+                margin = new RectOffset(4, 4, 0, 0)
+            };
+
+            // Create label style with upward offset
+            GUIStyle offsetLabelStyle = new(HeaderStyle)
+            {
+                contentOffset = new Vector2(0, -10)
+            };
+
+            // RGB sliders
+            GUILayout.BeginVertical();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("R:", offsetLabelStyle, GUILayout.Width(20));
+            color.r = GUILayout.HorizontalSlider(color.r, 0f, 1f, compactSliderStyle, SliderThumbStyle, GUILayout.Width(150));
+            GUILayout.Label($"{(int)(color.r * 255)}", offsetLabelStyle, GUILayout.Width(40));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("G:", offsetLabelStyle, GUILayout.Width(20));
+            color.g = GUILayout.HorizontalSlider(color.g, 0f, 1f, compactSliderStyle, SliderThumbStyle, GUILayout.Width(150));
+            GUILayout.Label($"{(int)(color.g * 255)}", offsetLabelStyle, GUILayout.Width(40));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("B:", offsetLabelStyle, GUILayout.Width(20));
+            color.b = GUILayout.HorizontalSlider(color.b, 0f, 1f, compactSliderStyle, SliderThumbStyle, GUILayout.Width(150));
+            GUILayout.Label($"{(int)(color.b * 255)}", offsetLabelStyle, GUILayout.Width(40));
+            GUILayout.EndHorizontal();
+
+            if (showAlpha)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("A:", offsetLabelStyle, GUILayout.Width(20));
+                color.a = GUILayout.HorizontalSlider(color.a, 0f, 1f, compactSliderStyle, SliderThumbStyle, GUILayout.Width(150));
+                GUILayout.Label($"{(int)(color.a * 255)}", offsetLabelStyle, GUILayout.Width(40));
+                GUILayout.EndHorizontal();
+            }
+
+            GUILayout.EndVertical();
+            GUILayout.EndHorizontal();
+
+            return color;
+        }
+
+        public static void ColorPicker(string label, ref Color color)
+        {
+            color = ColorPicker(label, color, true);
+        }
+
+        public static void ColorPicker(string label, ref Color color, bool showAlpha)
+        {
+            color = ColorPicker(label, color, showAlpha);
+        }
+
         private static Texture2D MakeCheckbox(int w, int h, Color bgColor)
         {
             Texture2D tex = new Texture2D(w, h);
@@ -345,8 +425,8 @@ namespace MineMogulModMenu {
             ButtonStyle.normal.textColor = Color.white;
             ButtonStyle.hover.textColor = new Color(0.9f, 0.6f, 1f);
             ButtonStyle.active.textColor = Color.white;
-            ButtonStyle.fontSize = 12;
-            ButtonStyle.fontStyle = FontStyle.Bold;
+            ButtonStyle.fontSize = 14;
+            ButtonStyle.fontStyle = FontStyle.Normal;
             ButtonStyle.padding = new RectOffset(10, 10, 6, 6);
             ButtonStyle.font = usingFont;
 
@@ -357,10 +437,11 @@ namespace MineMogulModMenu {
             SelectedButtonStyle.normal.textColor = Color.white;
             SelectedButtonStyle.hover.textColor = Color.white;
             SelectedButtonStyle.active.textColor = Color.white;
+            SelectedButtonStyle.fontStyle = FontStyle.Bold;
 
             HeaderStyle = new GUIStyle(GUI.skin.label);
             HeaderStyle.normal.textColor = new Color(1f, 1f, 1f);
-            HeaderStyle.fontSize = 12;
+            HeaderStyle.fontSize = 14;
             HeaderStyle.alignment = TextAnchor.MiddleLeft;
             HeaderStyle.font = usingFont;
 
@@ -375,7 +456,7 @@ namespace MineMogulModMenu {
             ToggleStyle.onNormal.textColor = new Color(0.9f, 0.6f, 1f);
             ToggleStyle.hover.textColor = new Color(0.9f, 0.6f, 1f);
             ToggleStyle.onHover.textColor = new Color(0.9f, 0.6f, 1f);
-            ToggleStyle.fontSize = 16;
+            ToggleStyle.fontSize = 14;
             ToggleStyle.fixedWidth = 20;
             ToggleStyle.fixedHeight = 20;
             ToggleStyle.margin = new RectOffset(4, 4, 4, 4);
@@ -391,7 +472,7 @@ namespace MineMogulModMenu {
             TextFieldStyle.normal.textColor = Color.white;
             TextFieldStyle.hover.textColor = new Color(0.9f, 0.6f, 1f);
             TextFieldStyle.focused.textColor = new Color(0.9f, 0.6f, 1f);
-            TextFieldStyle.fontSize = 12;
+            TextFieldStyle.fontSize = 14;
             TextFieldStyle.font = usingFont;
             TextFieldStyle.padding = new RectOffset(5, 5, 4, 4);
             TextFieldStyle.border = new RectOffset(2, 2, 2, 2);
@@ -403,7 +484,7 @@ namespace MineMogulModMenu {
             TextAreaStyle.normal.textColor = Color.white;
             TextAreaStyle.hover.textColor = new Color(0.9f, 0.6f, 1f);
             TextAreaStyle.focused.textColor = new Color(0.9f, 0.6f, 1f);
-            TextAreaStyle.fontSize = 12;
+            TextAreaStyle.fontSize = 14;
             TextAreaStyle.font = usingFont;
             TextAreaStyle.padding = new RectOffset(5, 5, 4, 4);
             TextAreaStyle.border = new RectOffset(2, 2, 2, 2);
@@ -415,6 +496,9 @@ namespace MineMogulModMenu {
             SliderStyle.active.background = MakeTex(1, 1, new Color(0.25f, 0.15f, 0.35f, 1f));
             SliderStyle.fixedHeight = 8;
             SliderStyle.margin = new RectOffset(4, 4, 8, 8);
+
+            ColorPickerSliderStyle = new GUIStyle(SliderStyle);
+            ColorPickerSliderStyle.margin = new RectOffset(4, 4, 0, 0);
 
             SliderThumbStyle = new GUIStyle(GUI.skin.horizontalSliderThumb);
             SliderThumbStyle.normal.background = MakeTex(1, 1, new Color(0.5f, 0.2f, 0.7f, 1f));
@@ -430,7 +514,7 @@ namespace MineMogulModMenu {
             SelectionTableStyle.normal.textColor = Color.white;
             SelectionTableStyle.hover.textColor = new Color(0.9f, 0.6f, 1f);
             SelectionTableStyle.active.textColor = Color.white;
-            SelectionTableStyle.fontSize = 12;
+            SelectionTableStyle.fontSize = 14;
             SelectionTableStyle.fontStyle = FontStyle.Normal;
             SelectionTableStyle.padding = new RectOffset(8, 8, 6, 6);
             SelectionTableStyle.font = usingFont;

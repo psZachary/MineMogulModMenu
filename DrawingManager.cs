@@ -59,7 +59,8 @@ namespace MineMogulModMenu {
             if (currentCamera == null || currentCamera != Camera.main)
                 return;
 
-            mat.SetPass(0);
+            if (Config.Instance.Settings.HighlightThroughWalls)
+                mat.SetPass(0);
 
             GL.PushMatrix();
             GL.Begin(GL.LINES);
