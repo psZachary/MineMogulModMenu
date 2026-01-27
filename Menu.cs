@@ -44,17 +44,16 @@ namespace MineMogulModMenu
             if (Input.GetKeyDown(KeyCode.F1))
             {
                 ShowMenu = !ShowMenu;
-
             }
 
-            if (!Cursor.visible && ShowMenu)
+            if (ShowMenu)
+            {
                 Cursor.visible = true;
-            if (Cursor.lockState != CursorLockMode.None && ShowMenu)
-                Cursor.lockState = CursorLockMode.Locked;
-
+                Cursor.lockState = CursorLockMode.None;
+            }
         }
         private void OnPlayerTab()
-        {
+        { 
             Config.Instance.Player.Noclip = MenuUtilities.Toggle(Config.Instance.Player.Noclip, "Noclip (V)");
             Config.Instance.Player.NoclipSpeed = MenuUtilities.HorizontalSlider("Noclip Speed", Config.Instance.Player.NoclipSpeed, 0.00f, 50f);
             Config.Instance.Player.WalkSpeed = MenuUtilities.HorizontalSlider("Walk Speed", Config.Instance.Player.WalkSpeed, 0.00f, 20f);
@@ -84,31 +83,33 @@ namespace MineMogulModMenu
         }
         private void OnMinersSubTab()
         {
-            string[] autoMinersStringList = GameUtilities.AutoMiners.Select(obj => obj.ToString()).ToArray();
+            string[] autoMinersStringList = [.. GameUtilities.AutoMiners.Select(obj => obj.ToString())];
             Config.Instance.Miners.SelectedIndex = MenuUtilities.SelectionTable(
                 "Auto Miners",
-                autoMinersStringList.Append("All Miners").ToArray(), 
+                [.. autoMinersStringList, "All Miners"],
                 Config.Instance.Miners.SelectedIndex
             );
             MinerModManager.SelectedMinerIndex = Config.Instance.Miners.SelectedIndex;
-            MenuUtilities.Separator(2f, 2f);
+            MenuUtilities.Separator(2f, 6f);
 
             Config.Instance.Miners.HighlightSelected = MenuUtilities.Toggle(Config.Instance.Miners.HighlightSelected, "Highlight Selected");
             Config.Instance.Miners.SpawnRate = MenuUtilities.HorizontalSlider("Spawn Rate", Config.Instance.Miners.SpawnRate, 0.00f, 10f);
-            if (MenuUtilities.Button("Set Spawn Rate")) {
+            if (MenuUtilities.Button("Set Spawn Rate"))
+            {
                 MinerModManager.ApplySpawnRate(Config.Instance.Miners.SpawnRate);
             }
         }
         private void OnFurnacesSubTab()
         {
-            string[] furnacesStringList = GameUtilities.Furnaces.Select(obj => obj.ToString()).ToArray();
+            string[] furnacesStringList = [.. GameUtilities.Furnaces.Select(obj => obj.ToString())];
             Config.Instance.Furnaces.SelectedIndex = MenuUtilities.SelectionTable(
                 "Furnaces",
-                furnacesStringList.Append("All Furnaces").ToArray(), 
+                [.. furnacesStringList, "All Furnaces"],
                 Config.Instance.Furnaces.SelectedIndex
             );
             FurnaceModManager.SelectedFurnaceIndex = Config.Instance.Furnaces.SelectedIndex;
-            MenuUtilities.Separator(2f, 2f);
+            MenuUtilities.Separator(2f, 6f);
+
             Config.Instance.Furnaces.HighlightSelected = MenuUtilities.Toggle(Config.Instance.Furnaces.HighlightSelected, "Highlight Selected");
             Config.Instance.Furnaces.ProcessingTime = MenuUtilities.HorizontalSlider("Processing Time", Config.Instance.Furnaces.ProcessingTime, 0.00f, 10f);
             if (MenuUtilities.Button("Set Processing Rate"))
@@ -131,9 +132,11 @@ namespace MineMogulModMenu
         }
         private void OnDepositBoxSubTab()
         {
-            if (MenuUtilities.Button("Upgrade To Tier 2")) {
+            if (MenuUtilities.Button("Upgrade To Tier 2"))
+            {
                 GameUtilities.DepositBox.UpgradeToTier2();
             }
+            MenuUtilities.Toggle(ref Config.Instance.DepositBox.InstantSell, "Instant Sell"); 
             // Only sets the animation speed look at coroutine
             //Config.Instance.DepositBox.Speed = MenuUtilities.HorizontalSlider("Speed", Config.Instance.DepositBox.Speed, 0.00f, 10f);
             //if (MenuUtilities.Button("Set Speed"))
@@ -142,8 +145,10 @@ namespace MineMogulModMenu
             //    field.SetValue(GameUtilities.DepositBox, Config.Instance.DepositBox.Speed);
             //}
         }
-        private void OnDetonatorsSubTab() {
-            if (MenuUtilities.Button("Detonate All")) {
+        private void OnDetonatorsSubTab()
+        {
+            if (MenuUtilities.Button("Detonate All"))
+            {
                 FindObjectsByType<DetonatorTrigger>(FindObjectsSortMode.None).ToList().ForEach(obj => obj.Interact(null));
             }
         }
@@ -193,19 +198,22 @@ namespace MineMogulModMenu
         {
             if (MenuUtilities.Button("Complete All"))
             {
-                GameUtilities.QuestManager.AllQuests.ToList().ForEach(quest => {
+                GameUtilities.QuestManager.AllQuests.ToList().ForEach(quest =>
+                {
                     quest.DebugUnlock();
                 });
             }
             if (MenuUtilities.Button("Complete Active"))
             {
-                GameUtilities.QuestManager.ActiveQuests.ToList().ForEach(quest => {
+                GameUtilities.QuestManager.ActiveQuests.ToList().ForEach(quest =>
+                {
                     quest.DebugUnlock();
                 });
             }
             if (MenuUtilities.Button("Unlock All"))
             {
-                GameUtilities.QuestManager.AllQuests.ToList().ForEach(quest => {
+                GameUtilities.QuestManager.AllQuests.ToList().ForEach(quest =>
+                {
                     quest.PrerequisiteQuests.Clear();
                 });
             }

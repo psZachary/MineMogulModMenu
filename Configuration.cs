@@ -38,7 +38,7 @@ namespace MineMogulModMenu
 
         public class DepositBoxConfig
         {
-            public float Speed = 2f;
+            public bool InstantSell = false;
         }
         public class PlayerConfig
         {

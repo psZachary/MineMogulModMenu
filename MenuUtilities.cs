@@ -9,6 +9,7 @@ namespace MineMogulModMenu {
         public static GUIStyle SelectedButtonStyle {get; private set;}
         public static GUIStyle HeaderStyle {get; private set;}
         public static GUIStyle ToggleStyle {get; private set;}
+        public static GUIStyle ToggleLabelStyle {get; private set;}
         public static GUIStyle TextFieldStyle {get; private set;}
         public static GUIStyle TextAreaStyle {get; private set;}
         public static GUIStyle SliderStyle {get; private set;}
@@ -16,6 +17,7 @@ namespace MineMogulModMenu {
         public static GUIStyle SelectionTableStyle {get; private set;}
         public static GUIStyle SelectionTableSelectedStyle {get; private set;}
         public static GUIStyle SelectionTableBorderStyle {get; private set;}
+        public static GUIStyle SelectionTableLabelStyle {get; private set;}
         public static GUIStyle SeparatorStyle {get; private set;}
         private static Texture2D checkboxOffTexture;
         private static Texture2D checkboxOnTexture;
@@ -93,12 +95,16 @@ namespace MineMogulModMenu {
             Rect rect = GUILayoutUtility.GetRect(200, 20);
 
             Texture2D box = value ? checkboxOnTexture : checkboxOffTexture;
-            if (GUI.Button(new Rect(rect.x, rect.y, 16, 16), box, GUIStyle.none))
+            if (GUI.Button(new Rect(rect.x, rect.y, 20, 20), box, GUIStyle.none))
                 value = !value;
 
-            GUI.Label(new Rect(rect.x + 22, rect.y, rect.width - 22, 16), label, HeaderStyle);
+            GUI.Label(new Rect(rect.x + 26, rect.y, rect.width - 26, 20), label, ToggleLabelStyle);
 
             return value;
+        }
+
+        public static void Toggle(ref bool value, string label) {
+            value = Toggle(value, label);
         }
 
         public static void Label(string text)
@@ -198,8 +204,8 @@ namespace MineMogulModMenu {
         public static int SelectionTable(string label, string[] options, int selectedIndex, float height, float padding)
         {
             // Draw label
-            GUILayout.Label(label, HeaderStyle);
-            GUILayout.Space(5);
+            GUILayout.Label(label, SelectionTableLabelStyle);
+            GUILayout.Space(2);
 
             // Begin border box
             GUILayout.BeginVertical(SelectionTableBorderStyle);
@@ -292,12 +298,11 @@ namespace MineMogulModMenu {
             GUILayout.Box("", SeparatorStyle, GUILayout.ExpandWidth(true), GUILayout.Height(height));
             GUILayout.Space(spacing);
         }
-        private static Texture2D MakeCheckbox(int w, int h, Color bgColor, bool isChecked)
+        private static Texture2D MakeCheckbox(int w, int h, Color bgColor)
         {
             Texture2D tex = new Texture2D(w, h);
             tex.hideFlags = HideFlags.HideAndDontSave;
             Color border = new Color(0.4f, 0.2f, 0.6f, 1f);
-            Color check = Color.white;
 
             for (int x = 0; x < w; x++)
             {
@@ -310,17 +315,6 @@ namespace MineMogulModMenu {
                 }
             }
 
-            if (isChecked)
-            {
-                for (int i = 3; i < w - 3; i++)
-                {
-                    tex.SetPixel(i, i, check);
-                    tex.SetPixel(i, i - 1, check);
-                    tex.SetPixel(w - 1 - i, i, check);
-                    tex.SetPixel(w - 1 - i, i - 1, check);
-                }
-            }
-
             tex.Apply();
             return tex;
         }
@@ -328,8 +322,8 @@ namespace MineMogulModMenu {
         {
             if (stylesInit) return;
 
-            checkboxOffTexture = MakeCheckbox(16, 16, new Color(0.18f, 0.18f, 0.18f, 1f), false);
-            checkboxOnTexture = MakeCheckbox(16, 16, new Color(0.5f, 0.2f, 0.7f, 1f), true);
+            checkboxOffTexture = MakeCheckbox(20, 20, new Color(0.18f, 0.18f, 0.18f, 1f));
+            checkboxOnTexture = MakeCheckbox(20, 20, new Color(0.5f, 0.2f, 0.7f, 1f));
 
             Font usingFont = Font.CreateDynamicFontFromOSFont("Consolas", 16);
 
@@ -381,10 +375,14 @@ namespace MineMogulModMenu {
             ToggleStyle.onNormal.textColor = new Color(0.9f, 0.6f, 1f);
             ToggleStyle.hover.textColor = new Color(0.9f, 0.6f, 1f);
             ToggleStyle.onHover.textColor = new Color(0.9f, 0.6f, 1f);
-            ToggleStyle.fontSize = 14;
-            ToggleStyle.fixedWidth = 16;
-            ToggleStyle.fixedHeight = 16;
+            ToggleStyle.fontSize = 16;
+            ToggleStyle.fixedWidth = 20;
+            ToggleStyle.fixedHeight = 20;
             ToggleStyle.margin = new RectOffset(4, 4, 4, 4);
+
+            ToggleLabelStyle = new GUIStyle(HeaderStyle);
+            ToggleLabelStyle.fontSize = 14;
+            ToggleLabelStyle.alignment = TextAnchor.MiddleLeft;
 
             TextFieldStyle = new GUIStyle(GUI.skin.textField);
             TextFieldStyle.normal.background = MakeTex(1, 1, new Color(0.15f, 0.15f, 0.15f, 1f));
@@ -451,6 +449,9 @@ namespace MineMogulModMenu {
             SelectionTableBorderStyle.normal.background = MakeTex(1, 1, new Color(0.18f, 0.18f, 0.18f, 1f));
             SelectionTableBorderStyle.border = new RectOffset(2, 2, 2, 2);
             SelectionTableBorderStyle.padding = new RectOffset(0, 0, 0, 0);
+
+            SelectionTableLabelStyle = new GUIStyle(HeaderStyle);
+            SelectionTableLabelStyle.fontSize = 14;
 
             SeparatorStyle = new GUIStyle();
             SeparatorStyle.normal.background = MakeTex(1, 1, new Color(0.18f, 0.18f, 0.18f, 1f));

@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
@@ -9,14 +10,15 @@ namespace MineMogulModMenu
     {
         internal static Menu MenuComponent;
         internal static GameUtilities GameUtilitiesComponent;
-        internal static BoundingBoxManager BoundingBoxManagerComponent;
+        internal static DrawingManager BoundingBoxManagerComponent;
         internal static MinerModManager MinerModManagerComponent;
         internal static FurnaceModManager FurnaceModManagerComponent;
         internal static NoclipController NoclipControllerComponent;
         internal static Harmony Harmony;
-
+        internal static ManualLogSource Log;
         private void Awake()
         {
+            Log = Logger;
             try
             {
                 Harmony = new Harmony("com.pszachary.minemogumodmenu");
@@ -32,7 +34,7 @@ namespace MineMogulModMenu
             Logger.LogInfo("Added Menu component");
             GameUtilitiesComponent = gameObject.AddComponent<GameUtilities>();
             Logger.LogInfo("Added GameUtilities component");
-            BoundingBoxManagerComponent = gameObject.AddComponent<BoundingBoxManager>();
+            BoundingBoxManagerComponent = gameObject.AddComponent<DrawingManager>();
             Logger.LogInfo("Added BoundingBoxManager component");
             MinerModManagerComponent = gameObject.AddComponent<MinerModManager>();
             Logger.LogInfo("Added MinerModManager component");
