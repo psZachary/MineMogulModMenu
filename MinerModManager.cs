@@ -19,7 +19,7 @@ namespace MineMogulModMenu {
                     DrawingManager.NextDrawEntries.Add(new DrawingEntry{
                         DrawType = DrawType.BoundingBox,
                         Renderers = [selectedMiner.GetComponent<Renderer>()],
-                        Color = Color.orangeRed
+                        Color = Color.blue
                     });
                 }
                 else {

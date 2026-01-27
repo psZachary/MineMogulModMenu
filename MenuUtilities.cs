@@ -155,7 +155,7 @@ namespace MineMogulModMenu {
             GUILayout.BeginHorizontal();
             value = GUILayout.HorizontalSlider(value, min, max, SliderStyle, SliderThumbStyle);
             string labelText = $"{label}: {value:F2}";
-            GUILayout.Label(labelText, HeaderStyle, GUILayout.Width(140f));
+            GUILayout.Label(labelText, HeaderStyle, GUILayout.Width(160f));
             GUILayout.EndHorizontal();
             return value;
         }
@@ -165,7 +165,7 @@ namespace MineMogulModMenu {
             GUILayout.BeginHorizontal();
             value = GUILayout.HorizontalSlider(value, min, max, SliderStyle, SliderThumbStyle, GUILayout.Width(sliderWidth));
             string labelText = $"{label}: {value:F2}";
-            GUILayout.Label(labelText, HeaderStyle, GUILayout.Width(140f));
+            GUILayout.Label(labelText, HeaderStyle, GUILayout.Width(160f));
             GUILayout.EndHorizontal();
             return value;
         }
