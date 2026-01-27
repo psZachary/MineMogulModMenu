@@ -37,9 +37,8 @@ if errorlevel 1 (
     echo %ESC%[91mERROR: Failed to copy game assemblies%ESC%[0m
     exit /b 1
 )
-echo Building project...
-dotnet build > nul
-if errorlevel 1 (
+dotnet build > nul 2>&1 || (
+    dotnet build
     echo %ESC%[91mERROR: Build failed%ESC%[0m
     exit /b 1
 )
