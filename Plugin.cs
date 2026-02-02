@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace MineMogulModMenu
 {
-    [BepInPlugin("com.pszachary.minemogumodmenu", "MineMogulModMenu", "1.3.0")]
+    [BepInPlugin("com.pszachary.minemogumodmenu", "MineMogulModMenu", "1.2.1")]
     public class Plugin : BaseUnityPlugin
     {
         internal static Menu MenuComponent;
