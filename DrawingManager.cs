@@ -1,25 +1,22 @@
 using System.Collections.Generic;
 using System.Linq;
-using JetBrains.Annotations;
 using UnityEngine;
 
-namespace MineMogulModMenu {
-    public enum DrawType {
+namespace MineMogulModMenu
+{
+    public enum DrawType
+    {
         BoundingBox
     }
-    public struct DrawingEntry {
-        public DrawType DrawType;
-        public Renderer[] Renderers;
-        public Color Color;
-        public DrawingEntry(DrawType drawType, Renderer[] renderers, Color color) {
-            DrawType = drawType;
-            Renderers = renderers;
-            Color = color;
-        }
+    public struct DrawingEntry(DrawType drawType, Renderer[] renderers, Color color)
+    {
+        public DrawType DrawType = drawType;
+        public Renderer[] Renderers = renderers;
+        public Color Color = color;
     }
     public class DrawingManager : MonoBehaviour
     {
-        public static List<DrawingEntry> NextDrawEntries = new List<DrawingEntry>();
+        public static List<DrawingEntry> NextDrawEntries = [];
         private Material mat;
 
         void Awake()
@@ -43,7 +40,7 @@ namespace MineMogulModMenu {
             GL.Vertex3(max.x, max.y, min.z); GL.Vertex3(max.x, max.y, max.z);
             GL.Vertex3(max.x, max.y, max.z); GL.Vertex3(min.x, max.y, max.z);
             GL.Vertex3(min.x, max.y, max.z); GL.Vertex3(min.x, max.y, min.z);
-            
+
             // Verticals
             GL.Vertex3(min.x, min.y, min.z); GL.Vertex3(min.x, max.y, min.z);
             GL.Vertex3(max.x, min.y, min.z); GL.Vertex3(max.x, max.y, min.z);
@@ -53,7 +50,7 @@ namespace MineMogulModMenu {
 
         void OnRenderObject()
         {
-            
+
             // Only render for the main camera to avoid duplicate rendering
             Camera currentCamera = Camera.current;
             if (currentCamera == null || currentCamera != Camera.main)
@@ -65,14 +62,18 @@ namespace MineMogulModMenu {
             GL.PushMatrix();
             GL.Begin(GL.LINES);
 
-            foreach (DrawingEntry entry in NextDrawEntries) {
+            foreach (DrawingEntry entry in NextDrawEntries)
+            {
                 if (entry.Renderers.Count() <= 0)
                     continue;
-                
+
                 GL.Color(entry.Color);
-                if (entry.DrawType == DrawType.BoundingBox) {
-                    foreach (Renderer r in entry.Renderers) {
-                        if (r) {
+                if (entry.DrawType == DrawType.BoundingBox)
+                {
+                    foreach (Renderer r in entry.Renderers)
+                    {
+                        if (r)
+                        {
                             DrawBounds(r.bounds);
                         }
                     }

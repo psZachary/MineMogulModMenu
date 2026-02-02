@@ -1,11 +1,4 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Xml.Serialization;
-using HarmonyLib;
 using UnityEngine;
 
 namespace MineMogulModMenu
@@ -77,7 +70,7 @@ namespace MineMogulModMenu
             Config.Instance.Research.AddTickets = MenuUtilities.TextField(Config.Instance.Research.AddTickets);
             if (MenuUtilities.Button("Add Tickets"))
             {
-                if (int.TryParse(Config.Instance.Economy.AddMoney, out int addTickets))
+                if (int.TryParse(Config.Instance.Research.AddTickets, out int addTickets))
                     GameUtilities.ResearchManager.AddResearchTickets(addTickets);
             }
         }

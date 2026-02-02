@@ -21,5 +21,6 @@
     <Reference Include="UnityEngine.TextRenderingModule"><HintPath>GameAssemblies\UnityEngine.TextRenderingModule.dll</HintPath></Reference>
     <Reference Include="Assembly-CSharp"><HintPath>GameAssemblies\Assembly-CSharp.dll</HintPath></Reference>
     <Reference Include="UnityEngine.UIModule"><HintPath>GameAssemblies\UnityEngine.UIModule.dll</HintPath></Reference>
+    
   </ItemGroup>
 </Project>

@@ -1,11 +1,12 @@
-﻿using BepInEx;
+﻿using System.Runtime.InteropServices;
+using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using UnityEngine;
 
 namespace MineMogulModMenu
 {
-    [BepInPlugin("com.pszachary.minemogumodmenu", "MineMogulModMenu", "1.1.0")]
+    [BepInPlugin("com.pszachary.minemogumodmenu", "MineMogulModMenu", "1.3.0")]
     public class Plugin : BaseUnityPlugin
     {
         internal static Menu MenuComponent;
@@ -42,6 +43,9 @@ namespace MineMogulModMenu
             Logger.LogInfo("Added FurnaceModManager component");
             NoclipControllerComponent = gameObject.AddComponent<NoclipController>();
             Logger.LogInfo("Added NoclipController component");
+        }
+        private void Update() {
+
         }
     }
 }

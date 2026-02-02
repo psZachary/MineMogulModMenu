@@ -1,7 +1,4 @@
-using System.Diagnostics;
-using System.Reflection;
 using HarmonyLib;
-using UnityEngine;
 
 namespace MineMogulModMenu {
     [HarmonyPatch(typeof(UIManager), nameof(UIManager.IsInAnyMenu))]

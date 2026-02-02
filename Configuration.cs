@@ -1,4 +1,3 @@
-using UnityEngine.Rendering;
 using UnityEngine;
 
 namespace MineMogulModMenu
@@ -6,7 +5,7 @@ namespace MineMogulModMenu
     public class Config
     {
         public static Config Instance { get; } = new Config();
-        
+
         public MinerConfig Miners { get; } = new MinerConfig();
         public PlayerConfig Player { get; } = new PlayerConfig();
         public FurnacesConfig Furnaces { get; } = new FurnacesConfig();
@@ -15,13 +14,16 @@ namespace MineMogulModMenu
         public ResearchConfig Research { get; } = new ResearchConfig();
         public PolishingMachineConfig PolishingMachine { get; } = new PolishingMachineConfig();
         public SettingsConfig Settings { get; } = new SettingsConfig();
-        public class PolishingMachineConfig {
+        public class PolishingMachineConfig
+        {
             public bool IgnoreDirtyOres = false;
         }
-        public class EconomyConfig {
+        public class EconomyConfig
+        {
             public string AddMoney = "500";
         }
-        public class ResearchConfig {
+        public class ResearchConfig
+        {
             public string AddTickets = "10";
         }
         public class MinerConfig
@@ -30,7 +32,7 @@ namespace MineMogulModMenu
             public int SelectedIndex = 0;
             public float SpawnRate = 1f;
         }
-        
+
         public class FurnacesConfig
         {
             public bool HighlightSelected = true;
@@ -50,7 +52,8 @@ namespace MineMogulModMenu
             public float SprintSpeed = 6f;
             public float JumpHeight = 2f;
         }
-        public class SettingsConfig {
+        public class SettingsConfig
+        {
             public Color MinerHighlightColor = Color.blue;
             public Color FurnaceHighlightColor = Color.orangeRed;
             public bool HighlightThroughWalls = true;

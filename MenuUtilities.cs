@@ -1,33 +1,42 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-namespace MineMogulModMenu {
-    public class MenuUtilities : MonoBehaviour {
-        public static bool IsDragging {get; private set;}
-        public static Vector2 DragOffset {get; private set;}
-        public static GUIStyle WindowStyle {get; private set;}
-        public static GUIStyle ButtonStyle {get; private set;}
-        public static GUIStyle SelectedButtonStyle {get; private set;}
-        public static GUIStyle HeaderStyle {get; private set;}
-        public static GUIStyle ToggleStyle {get; private set;}
-        public static GUIStyle ToggleLabelStyle {get; private set;}
-        public static GUIStyle TextFieldStyle {get; private set;}
-        public static GUIStyle TextAreaStyle {get; private set;}
-        public static GUIStyle SliderStyle {get; private set;}
-        public static GUIStyle SliderThumbStyle {get; private set;}
-        public static GUIStyle ColorPickerSliderStyle {get; private set;}
-        public static GUIStyle SelectionTableStyle {get; private set;}
-        public static GUIStyle SelectionTableSelectedStyle {get; private set;}
-        public static GUIStyle SelectionTableBorderStyle {get; private set;}
-        public static GUIStyle SelectionTableLabelStyle {get; private set;}
-        public static GUIStyle SeparatorStyle {get; private set;}
+namespace MineMogulModMenu
+{
+    public class MenuUtilities : MonoBehaviour
+    {
+        public static bool IsDragging { get; private set; }
+        public static Vector2 DragOffset { get; private set; }
+        private static Dictionary<string, Vector2> scrollPositions = new Dictionary<string, Vector2>();
+        public static GUIStyle WindowStyle { get; private set; }
+        public static GUIStyle ButtonStyle { get; private set; }
+        public static GUIStyle SelectedButtonStyle { get; private set; }
+        public static GUIStyle HeaderStyle { get; private set; }
+        public static GUIStyle ToggleStyle { get; private set; }
+        public static GUIStyle ToggleLabelStyle { get; private set; }
+        public static GUIStyle TextFieldStyle { get; private set; }
+        public static GUIStyle TextAreaStyle { get; private set; }
+        public static GUIStyle SliderStyle { get; private set; }
+        public static GUIStyle SliderThumbStyle { get; private set; }
+        public static GUIStyle ColorPickerSliderStyle { get; private set; }
+        public static GUIStyle SelectionTableStyle { get; private set; }
+        public static GUIStyle SelectionTableSelectedStyle { get; private set; }
+        public static GUIStyle SelectionTableBorderStyle { get; private set; }
+        public static GUIStyle SelectionTableLabelStyle { get; private set; }
+        public static GUIStyle SeparatorStyle { get; private set; }
+        public static GUIStyle ScrollViewStyle { get; private set; }
+        public static GUIStyle VerticalScrollbarStyle { get; private set; }
+        public static GUIStyle VerticalScrollbarThumbStyle { get; private set; }
         private static Texture2D checkboxOffTexture;
         private static Texture2D checkboxOnTexture;
         private static bool stylesInit = false;
 
-        public static void ResetStyles() {
+        public static void ResetStyles()
+        {
             stylesInit = false;
         }
-        public static void DragWindow(ref Rect windowRect) {
+        public static void DragWindow(ref Rect windowRect)
+        {
             Vector2 mouse = new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y);
             Rect titleRect = new Rect(windowRect.x, windowRect.y, windowRect.width, 30);
 
@@ -104,7 +113,8 @@ namespace MineMogulModMenu {
             return value;
         }
 
-        public static void Toggle(ref bool value, string label) {
+        public static void Toggle(ref bool value, string label)
+        {
             value = Toggle(value, label);
         }
 
@@ -215,7 +225,14 @@ namespace MineMogulModMenu {
             // Begin inner content area with padding
             GUILayout.BeginHorizontal();
             GUILayout.Space(padding);
-            GUILayout.BeginVertical(GUILayout.Height(height), GUILayout.ExpandWidth(true));
+
+            // Get or create scroll position for this table
+            if (!scrollPositions.ContainsKey(label))
+                scrollPositions[label] = Vector2.zero;
+
+            Vector2 scrollPos = scrollPositions[label];
+            scrollPos = GUILayout.BeginScrollView(scrollPos, GUILayout.Height(height), GUILayout.ExpandWidth(true));
+            scrollPositions[label] = scrollPos;
 
             // Draw selection options
             for (int i = 0; i < options.Length; i++)
@@ -228,8 +245,8 @@ namespace MineMogulModMenu {
                 }
             }
 
-            // End inner content area with padding
-            GUILayout.EndVertical();
+            GUILayout.EndScrollView();
+
             GUILayout.Space(padding);
             GUILayout.EndHorizontal();
 
@@ -408,7 +425,7 @@ namespace MineMogulModMenu {
             Font usingFont = Font.CreateDynamicFontFromOSFont("Consolas", 16);
 
             WindowStyle = new GUIStyle(GUI.skin.window);
-            WindowStyle.normal.background = MakeTex(1, 1, new Color(0.1f, 0.1f, 0.1f, 0.98f));
+            WindowStyle.normal.background = MakeTex(1, 1, new Color(0.1f, 0.1f, 0.1f, 0.95f));
             WindowStyle.onNormal.background = WindowStyle.normal.background;
             WindowStyle.normal.textColor = new Color(0.757f, 0.6f, 1f);
             WindowStyle.font = usingFont;
@@ -541,6 +558,21 @@ namespace MineMogulModMenu {
             SeparatorStyle.normal.background = MakeTex(1, 1, new Color(0.18f, 0.18f, 0.18f, 1f));
             SeparatorStyle.margin = new RectOffset(0, 0, 0, 0);
             SeparatorStyle.padding = new RectOffset(0, 0, 0, 0);
+
+            ScrollViewStyle = new GUIStyle();
+            ScrollViewStyle.normal.background = MakeTex(1, 1, new Color(0.12f, 0.12f, 0.12f, 1f));
+
+            VerticalScrollbarStyle = new GUIStyle(GUI.skin.verticalScrollbar);
+            VerticalScrollbarStyle.normal.background = MakeTex(8, 8, new Color(0.2f, 0.2f, 0.2f, 1f));
+            VerticalScrollbarStyle.fixedWidth = 14;
+
+            VerticalScrollbarThumbStyle = new GUIStyle(GUI.skin.verticalScrollbarThumb);
+            VerticalScrollbarThumbStyle.normal.background = MakeTex(8, 8, new Color(0.5f, 0.2f, 0.7f, 1f));
+            VerticalScrollbarThumbStyle.hover.background = MakeTex(8, 8, new Color(0.6f, 0.3f, 0.8f, 1f));
+            VerticalScrollbarThumbStyle.active.background = MakeTex(8, 8, new Color(0.7f, 0.4f, 0.9f, 1f));
+
+            // Apply thumb style to skin for scrollview to pick it up
+            GUI.skin.verticalScrollbarThumb = VerticalScrollbarThumbStyle;
 
             stylesInit = true;
         }
