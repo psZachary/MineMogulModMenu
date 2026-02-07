@@ -17,29 +17,44 @@ namespace MineMogulModMenu
         }
         private void Update()
         {
-            _selectedMiner = GameUtilities.AutoMiners.Where((miner, index) => index == Config.Instance.Miners.SelectedIndex).FirstOrDefault();
+            _selectedMiner = GameUtilities.AutoMiners
+                .Where((miner, index) => index == Config.Instance.Miners.SelectedIndex)
+                .FirstOrDefault();
 
-            if (Config.Instance.Miners.HighlightSelected)
+            if (!Config.Instance.Miners.HighlightSelected)
+                return;
+
+            if (_selectedMiner != null)
             {
-                if (_selectedMiner != null)
+                var renderer = _selectedMiner.GetComponent<Renderer>();
+                if (renderer != null)
                 {
                     DrawingManager.NextDrawEntries.Add(new DrawingEntry
                     {
                         DrawType = DrawType.BoundingBox,
-                        Renderers = [_selectedMiner.GetComponent<Renderer>()],
-                        Color = Config.Instance.Settings.MinerHighlightColor
-                    });
-                }
-                else
-                {
-                    DrawingManager.NextDrawEntries.Add(new DrawingEntry
-                    {
-                        DrawType = DrawType.BoundingBox,
-                        Renderers = [.. GameUtilities.AutoMiners.Select(f => f.GetComponent<Renderer>())],
+                        Renderers = [renderer],
                         Color = Config.Instance.Settings.MinerHighlightColor
                     });
                 }
             }
+            else
+                {
+                    var renderers = GameUtilities.AutoMiners
+                        .Where(f => f != null)
+                        .Select(f => f.GetComponent<Renderer>())
+                        .Where(r => r != null)
+                        .ToArray();
+
+                    if (renderers.Length > 0)
+                    {
+                        DrawingManager.NextDrawEntries.Add(new DrawingEntry
+                        {
+                            DrawType = DrawType.BoundingBox,
+                            Renderers = renderers,
+                            Color = Config.Instance.Settings.MinerHighlightColor
+                        });
+                    }
+                }
         }
         public static void ApplySpawnRate(float spawnRate)
         {

@@ -16,25 +16,40 @@ namespace MineMogulModMenu
 
         private void Update()
         {
-            selectedFurnace = GameUtilities.Furnaces.Where((furnace, index) => index == Config.Instance.Furnaces.SelectedIndex).FirstOrDefault();
+            selectedFurnace = GameUtilities.Furnaces
+                .Where((furnace, index) => index == Config.Instance.Furnaces.SelectedIndex)
+                .FirstOrDefault();
 
-            if (Config.Instance.Furnaces.HighlightSelected)
+            if (!Config.Instance.Furnaces.HighlightSelected)
+                return;
+
+            if (selectedFurnace != null)
             {
-                if (selectedFurnace)
+                var renderer = selectedFurnace.GetComponent<Renderer>();
+                if (renderer != null)
                 {
                     DrawingManager.NextDrawEntries.Add(new DrawingEntry
                     {
                         DrawType = DrawType.BoundingBox,
-                        Renderers = [selectedFurnace.GetComponent<Renderer>()],
+                        Renderers = [renderer],
                         Color = Config.Instance.Settings.FurnaceHighlightColor
                     });
                 }
-                else
+            }
+            else
+            {
+                var renderers = GameUtilities.Furnaces
+                    .Where(f => f != null)
+                    .Select(f => f.GetComponent<Renderer>())
+                    .Where(r => r != null)
+                    .ToArray();
+
+                if (renderers.Length > 0)
                 {
                     DrawingManager.NextDrawEntries.Add(new DrawingEntry
                     {
                         DrawType = DrawType.BoundingBox,
-                        Renderers = [.. GameUtilities.Furnaces.Select(f => f.GetComponent<Renderer>())],
+                        Renderers = renderers,
                         Color = Config.Instance.Settings.FurnaceHighlightColor
                     });
                 }
